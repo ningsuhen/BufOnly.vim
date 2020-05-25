@@ -19,6 +19,8 @@ command! -nargs=? -complete=buffer -bang Bufonly
     \ :call BufOnly('<args>', '<bang>')
 command! -nargs=? -complete=buffer -bang BufOnly
     \ :call BufOnly('<args>', '<bang>')
+    
+let g:bufonly_delete_tool_buffers=0
 
 function! BufOnly(buffer, bang)
 	if a:buffer == ''
@@ -44,7 +46,7 @@ function! BufOnly(buffer, bang)
 	let delete_count = 0
 	let n = 1
 	while n <= last_buffer
-		if n != buffer && buflisted(n)
+		if (g:bufonly_delete_tool_buffers || &ma != 0) && n != buffer && buflisted(n)
 			if a:bang == '' && getbufvar(n, '&modified')
 				echohl ErrorMsg
 				echomsg 'No write since last change for buffer'
